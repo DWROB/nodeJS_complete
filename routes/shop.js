@@ -4,19 +4,20 @@ const { Router } = require("express");
 const express = require("express");
 
 const rootDir = require("../util/path");
-const adminData = require('./admin');
+const adminData = require("./admin");
 
 const router = express.Router();
 
 router.get("/", (req, res, next) => {
-  // console.log(adminData.products); // rarely used as this data is available for all users.
-  // res.sendFile(path.join(rootDir, "views", "shop.html"));
-
-  // we want to use the products.
   const products = adminData.products;
-
-  // we want to render a template
-  res.render('shop', { prods: products, docTitle: 'Shop' });
+  res.render("shop", {
+    prods: products,
+    pageTitle: "Shop",
+    path: "/",
+    hasProducts: products.length > 0,
+    activeShop: true,
+    productCSS: true,
+  });
 });
 
 module.exports = router;
