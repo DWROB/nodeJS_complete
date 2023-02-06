@@ -1,19 +1,28 @@
-const express = require('express');
+const express = require("express");
 
 const router = express.Router();
 
-router.get('/', (req, res, next) => {
+const users = [];
+
+router.get("/", (req, res, next) => {
   // render a form that allows user to input their name
-  res.send('<p> hello </p>');
+  res.render("users_new_form", { pageTitle: "Register New User", path: "/" });
 });
 
-router.post('/', (req, res, next) => {
-  // store name and redirect to /users
+router.post("/", (req, res, next) => {
+  users.push({ name: req.body.username });
+  res.redirect("/users");
 });
 
-router.get('/users', (req, res, next) => {
+router.get("/users", (req, res, next) => {
   // render a ul with user names or error text with no users.
-  res.send('<p> hello users </p>');
+  const userIndex = users;
+  res.render("users_index", {
+    users: userIndex,
+    pageTitle: "User Index",
+    path: "/users",
+  });
 });
 
-module.exports = router;
+exports.routes = router;
+exports.users = users;
