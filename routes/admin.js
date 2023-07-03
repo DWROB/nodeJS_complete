@@ -9,7 +9,8 @@ const router = express.Router();
 
 // routes GET
 router.get('/add-product', adminController.getAddProduct);
-router.get('/products', shopController.getProducts);
+
+router.get('/products', adminController.getProducts);
 
 // POST
 router.post('/add-product', adminController.postAddProduct);
