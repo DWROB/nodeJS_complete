@@ -22,7 +22,7 @@ exports.postAddProduct = (req, res, next) => {
 exports.getEditProduct = (req, res, next) => {
     
     res.render('../views/admin/edit-product', {
-        pageTitle: 'Add Product',
+        pageTitle: 'Edit Product',
         path: '/admin/edit-product',
         editing: true
     });
