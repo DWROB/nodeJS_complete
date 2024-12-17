@@ -35,7 +35,7 @@ app.use(errorController.get404);
 
 // delete products when user is deleted.
 Product.belongsTo(User, {constraints: true, onDelete: 'CASCADE' });
-// User.hasMany(Product);
+User.hasMany(Product);
 
 // force true arg only to overwrite existing tables.
 sequelize
