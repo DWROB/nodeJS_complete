@@ -44,3 +44,16 @@ exports.getIndex = (req, res, next) => {
             console.log(err);
         });
 };
+
+exports.postCart = (req, res, next) => {
+    const prodId = req.body.productId;
+    Product.findById(prodId).then(product => {
+        return req.user.addToCart(product);
+    })
+    .then(result => {
+       console.log(result);
+    })
+    .catch(err => {
+        console.log(err);
+    });
+};
