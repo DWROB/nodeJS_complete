@@ -2,7 +2,7 @@ const Product = require("../models/product");
 // const Order = require("../models/order");
 
 exports.getProducts = (req, res, next) => {
-    Product.fetchAll()
+    Product.find()
         .then(products => {
             res.render("shop/product-list", {
                 prods: products,
@@ -32,7 +32,7 @@ exports.getProduct = (req, res, next) => {
 
 // REVIEW -  Remove if not needed
 exports.getIndex = (req, res, next) => {
-    Product.fetchAll()
+    Product.find()
         .then(products => {
             res.render('shop/index', {
                 prods: products,
@@ -69,12 +69,13 @@ exports.postCartDeleteProduct = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-    req.user.getCart()
+    req.user.populate('cart.items.productId')
         .then(products => {
+            console.log(products);
             res.render('shop/cart', {
                 path: '/cart',
                 pageTitle: 'Your Cart',
-                products: products
+                products: products.cart.items
             });
         })
         .catch(err => console.log(err));
