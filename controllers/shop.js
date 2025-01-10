@@ -82,17 +82,31 @@ exports.getCart = (req, res, next) => {
 };
 
 exports.postOrder = (req, res, next) => {
-    req.user.populate('cart.item.productId')
-        .then(products => {
-            
+    req.user.populate('cart.items.productId')
+        .then(user => {
+            const products = user.cart.items.map(i => {
+                return { quantity: i.quantity, productData: { ...i.productId._doc } }
+            });
+
+            const order = new Order({
+                products: products,
+                user: {
+                    name: req.user.name,
+                    userId: req.user
+                }
+            })
+            return order.save();
+        })
+        .then(result => {
+            req.user.clearCart();
+            console.log(result);
             res.redirect('/orders');
         })
         .catch(err => console.log(err));
 };
 
 exports.getOrders = (req, res, next) => {
-    req.user
-        .getOrders()
+    Order.find({ "user.userId": req.user._id })
         .then(orders => {
             res.render('shop/orders', {
                 path: '/orders',
