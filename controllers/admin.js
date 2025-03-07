@@ -4,7 +4,8 @@ exports.getAddProduct = (req, res, next) => {
     res.render('admin/edit-product', {
         pageTitle: 'Add Product',
         path: '/admin/add-product',
-        editing: false
+        editing: false,
+        isAuthenticated: req.session.isLoggedIn
     });
 };
 
@@ -13,7 +14,6 @@ exports.postAddProduct = (req, res, next) => {
     const imageUrl = req.body.imageUrl;
     const price = req.body.price;
     const description = req.body.description;
-
     const product = new Product({
         title: title,
         price: price,
@@ -21,10 +21,10 @@ exports.postAddProduct = (req, res, next) => {
         imageUrl: imageUrl,
         userId: req.user
     });
-
     product
         .save()
         .then(result => {
+
             console.log('Product Created!');
             res.redirect('/admin/products');
         })
@@ -48,7 +48,8 @@ exports.getEditProduct = (req, res, next) => {
                 pageTitle: 'Edit Product',
                 path: '/admin/edit-product',
                 editing: editMode,
-                product: product
+                product: product,
+                isAuthenticated: req.session.isLoggedIn
             });
         })
         .catch(err => { console.log(err) });
@@ -77,14 +78,14 @@ exports.postEditProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-    Product
-        .find()
+    Product.find()
         .then(products => {
             console.log(products);
             res.render('admin/products', {
                 prods: products,
                 pageTitle: 'Admin Products',
-                path: '/admin/products'
+                path: '/admin/products',
+                isAuthenticated: req.session.isLoggedIn
         });
         }).catch(err => {
             console.log(err);
@@ -95,8 +96,8 @@ exports.postDeleteProduct = (req, res, next) => {
     const prodId = req.body.productId;
     Product.findByIdAndDelete(prodId)
         .then(() => {
-            res.redirect('/admin/products');
             console.log('product destroyed');
+            res.redirect('/admin/products');
         })
         .catch(err => {
             console.log(err);
