@@ -32,7 +32,6 @@ exports.getProduct = (req, res, next) => {
         });
 }
 
-// REVIEW -  Remove if not needed
 exports.getIndex = (req, res, next) => {
     Product.find()
         .then(products => {
