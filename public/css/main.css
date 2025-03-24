@@ -246,6 +246,7 @@ form {
 .user-message--error {
     border-color: hsl(0, 97%, 36%);
     background-color: rgb(251, 140, 140);
+    color: red;
 }
 
 @media (min-width: 768px) {
