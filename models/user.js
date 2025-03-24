@@ -3,11 +3,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    name: {
+    email: {
         type: String,
         required: true
     },
-    email: {
+    password: {
         type: String,
         required: true
     },
@@ -24,11 +24,6 @@ const userSchema = new Schema({
         ]
     }
 });
-
-userSchema.methods.clearCart = function() {
-    this.cart = { items: [] };
-    return this.save();
-};
 
 userSchema.methods.addToCart = function(product) {
     const cartProductIndex = this.cart.items.findIndex(cp => {
@@ -61,6 +56,11 @@ userSchema.methods.removeFromCart = function(productId) {
     this.cart.items = updatedCartItems;
     return this.save();
 }
+
+userSchema.methods.clearCart = function() {
+    this.cart = { items: [] };
+    return this.save();
+};
 
 module.exports = mongoose.model('User', userSchema);
 
