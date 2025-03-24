@@ -1,12 +1,13 @@
 const bcrypt = require('bcryptjs');
 
 const User = require('../models/user');
+const { ValidationErrorItem } = require('sequelize');
 
 exports.getLogin = (req, res, next) => {
     res.render('auth/login', {
         path: '/login',
         pageTitle: 'Login Page',
-        isAuthenticated: false
+        errorMessage: req.flash('error')
     });
 };
 
@@ -24,6 +25,7 @@ exports.postLogin = (req, res, next) => {
     User.findOne({email: email})
     .then(user => {
         if (!user) {
+            req.flash('error', 'Invalid email or password.');
             return res.redirect('/login');
         }
         bcrypt.compare(password, user.password)
