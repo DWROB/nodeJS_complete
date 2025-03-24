@@ -1,3 +1,5 @@
+const bcrypt = require('bcryptjs');
+
 const User = require('../models/user');
 
 exports.getLogin = (req, res, next) => {
@@ -29,7 +31,35 @@ exports.postLogin = (req, res, next) => {
     .catch(err => console.log(err));
 };
 
-exports.postSignup = (req, res, next) => {};
+exports.postSignup = (req, res, next) => {
+    const email = req.body.email; // could make index on email with unique on mongo.
+    const password = req.body.password;
+    const confirmPassword = req.body.confirmPassword; // ignoring validating user input for now until later.
+    User.findOne({email: email})
+        .then(userDoc => {
+            console.log('hello');
+            if (userDoc) {
+                return res.redirect('/signup');
+            }
+            return bcrypt //async process handle a promise
+                .hash(password, 12)
+                .then(hashedPassword => {
+                    const user = new User({
+                        email: email,
+                        password: hashedPassword,
+                        cart: { items: [] }
+                    });
+                    return user.save();
+                })
+                .then(userSaveResult => {
+                    console.log(userSaveResult);
+                    res.redirect('/login');
+                })
+        })
+        .catch(err => {
+        console.log(err);
+    })
+};
 
 exports.postLogout = (req, res, next) => {
     req.session.destroy(err => {
